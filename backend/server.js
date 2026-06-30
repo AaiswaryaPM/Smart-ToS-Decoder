@@ -1,10 +1,13 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
-const express = require("express");
-const cors = require("cors");
+import express from "express";
+import cors from "cors";
 
-const connectDB = require("./config/db");
-const analysisRoutes = require("./routes/analysisRoutes");
+import connectDB from "./config/db.js";
+
+import analysisRoutes from "./routes/analysisRoutes.js";
+import uploadRoutes from "./routes/uploadRoutes.js";
 
 const app = express();
 
@@ -14,6 +17,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api", analysisRoutes);
+app.use("/api", uploadRoutes);
 
 app.get("/", (req, res) => {
   res.send("API Running");

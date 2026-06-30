@@ -1,12 +1,13 @@
-const express = require("express");
-const router = express.Router();
+import express from "express";
 
-const {
+import {
   analyzeTerms,
   getHistory,
   deleteHistoryItem,
   clearHistory,
-} = require("../controllers/analysisController");
+} from "../controllers/analysisController.js";
+
+const router = express.Router();
 
 router.post("/analyze", analyzeTerms);
 
@@ -16,4 +17,4 @@ router.delete("/history/:id", deleteHistoryItem);
 
 router.delete("/history", clearHistory);
 
-module.exports = router;
+export default router;

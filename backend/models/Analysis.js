@@ -1,4 +1,3 @@
-// models/Analysis.js
 import mongoose from "mongoose";
 
 const analysisSchema = new mongoose.Schema(
