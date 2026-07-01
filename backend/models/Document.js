@@ -6,18 +6,21 @@ const documentSchema = new mongoose.Schema(
             type: String,
             required: true
         },
+        originalName: {
+            type: String,
+            required: true
+        },
         fileType: {
             type: String,
             required:true
         },
-        originalText: {
-            type: String,
-            required: true
-        },
-        uploadedAt: {
-            type: Date,
-            default: Date.now
+        totalChunks: {
+            type: Number,
+            default: 0
         }
+    },
+    {
+        timestamps: true
     }
 );
 

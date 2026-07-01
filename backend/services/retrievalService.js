@@ -19,12 +19,14 @@ function cosineSimilarity(vecA, vecB){
     return dot / (magA * magB);
 }
 
-export async function retrieveRelevantChunks(question, topK = 5) {
+export async function retrieveRelevantChunks(question, documentId, topK = 5) {
     // Creating embedding for user question
     const questionEmbedding = await createEmbedding(question);
 
     // Fetch all chunks
-    const chunks = await Chunk.find();
+    const chunks = await Chunk.find({
+        documentId
+    });
 
     // Calculate similarity
     const scoredChunks = chunks.map(chunk => ({

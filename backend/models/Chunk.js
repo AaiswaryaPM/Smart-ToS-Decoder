@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 
 const chunkSchema = new mongoose.Schema(
     {
+        documentId: {
+            type:  mongoose.Schema.Types.ObjectId,
+            ref: "Document",
+            required: true
+        },
         documentName: {
             type: String,
             required: true,

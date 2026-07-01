@@ -1,13 +1,10 @@
-import "dotenv/config";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-const genai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
-const model = genai.getGenerativeModel({
-    model: "gemini-embedding-001",
-});
+import ai from "../config/gemini.js";
 
 export async function createEmbedding(text) {
-    const result = await model.embedContent(text);
-    return result.embedding.values;
+  const response = await ai.models.embedContent({
+    model: "gemini-embedding-001",
+    contents: text,
+  });
+
+  return response.embeddings[0].values;
 }
