@@ -9,6 +9,7 @@ import connectDB from "./config/db.js";
 import analysisRoutes from "./routes/analysisRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import ragRoutes from "./routes/ragRoutes.js";
+import progressRoutes from "./routes/progressRoutes.js";
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use("/api", analysisRoutes);
 app.use("/api", uploadRoutes);
 app.use("/api/rag", ragRoutes);
+app.use("/api", progressRoutes);
 
 app.get("/", (req, res) => {
   res.send("API Running");
