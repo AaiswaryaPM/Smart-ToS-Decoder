@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import API from "../services/api";
 import Message from "./Message";
 import SourceCard from "./SourceCard";
@@ -6,7 +6,15 @@ import SourceCard from "./SourceCard";
 function ChatBox({ documentId, documentName }) {
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState([]);
+  const messagesEndRef = useRef(null);
   const [loading, setLoading] = useState(false);
+
+  // Auto-scroll to latest message
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [messages, loading]);
 
   const askQuestion = async () => {
     if (!question.trim()) return;
@@ -78,14 +86,15 @@ function ChatBox({ documentId, documentName }) {
         )}
 
         {messages.map((msg, index) => (
-        <div key={index}>
+          <div key={index}>
             <Message message={msg} />
+
             {msg.role === "assistant" && (
-            <SourceCard
+              <SourceCard
                 sources={msg.sources}
-            />
+              />
             )}
-        </div>
+          </div>
         ))}
 
         {loading && (
@@ -93,6 +102,9 @@ function ChatBox({ documentId, documentName }) {
             🤖 Thinking...
           </div>
         )}
+
+        {/* Auto-scroll target */}
+        <div ref={messagesEndRef}></div>
 
       </div>
 

@@ -3,6 +3,9 @@ import API from "../services/api";
 
 function UploadDocument({ onUploadSuccess }) {
   const [uploading, setUploading] = useState(false);
+  const [processing, setProcessing] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [stage, setStage] = useState("");
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -13,25 +16,63 @@ function UploadDocument({ onUploadSuccess }) {
     formData.append("document", file);
 
     try {
-      setUploading(true);
 
-      const res = await API.post("/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      setUploading(true);
+      setProcessing(false);
+      setProgress(0);
+      setStage("Preparing upload...");
+
+      const startRes = await API.post("/upload/start");
+      const documentId = startRes.data.documentId;
+      const backendURL = API.defaults.baseURL.replace("/api", "");
+      const eventSource = new EventSource(
+        `${backendURL}/api/progress/${documentId}`
+      );
+
+      eventSource.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        setProcessing(true);
+        setUploading(false);
+        setProgress(data.percent);
+        setStage(data.stage);
+        if (data.completed) {
+          eventSource.close();
+          setProcessing(false);
+          alert("Document uploaded successfully!");
+        }
+      };
+      eventSource.onerror = () => {
+        eventSource.close();
+      };
+      const uploadRes = await API.post(
+        `/upload/process/${documentId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (progressEvent) => {
+            if (progressEvent.total) {
+              const percent = Math.round(
+                (progressEvent.loaded * 100) /
+                progressEvent.total
+              );
+              setProgress(percent);
+            }
+          },
+        }
+      );
 
       onUploadSuccess({
-        documentId: res.data.documentId,
-        filename: res.data.filename,
+        documentId,
+        filename: uploadRes.data.filename,
       });
-
-      alert("Document uploaded successfully!");
-    } catch (err) {
+    }
+    catch (err) {
       console.error(err);
-      alert("Upload failed");
-    } finally {
       setUploading(false);
+      setProcessing(false);
+      alert("Upload failed");
     }
   };
 
@@ -52,6 +93,54 @@ function UploadDocument({ onUploadSuccess }) {
         />
 
       </label>
+
+      {uploading && (
+        <div className="upload-progress">
+          <p>Uploading Document</p>
+          <div className="progress-bar">
+            <div className="progress-fill" style={{width: `${progress}%`}}></div>
+          </div>
+          <span>{progress}</span>
+        </div>
+      )}
+
+      {processing && (
+        <div className="processing">
+
+          <div className="spinner"></div>
+
+          <div className="processing-content">
+
+            <p 
+            className={`upload-stage ${
+            stage.includes("Reading")
+              ? "reading"
+              : stage.includes("Splitting")
+              ? "splitting"
+              : stage.includes("Generating")
+              ? "embedding"
+              : stage.includes("Saving")
+              ? "saving"
+              : stage.includes("Completed")
+              ? "completed"
+              : ""
+          }`}>{stage}</p>
+
+            <div className="progress-bar">
+
+              <div
+                className="progress-fill"
+                style={{ width: `${progress}%` }}
+              />
+
+            </div>
+
+            <span>{progress}%</span>
+
+          </div>
+
+        </div>
+      )}
 
     </div>
   );

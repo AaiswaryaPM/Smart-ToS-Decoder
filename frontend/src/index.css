@@ -22,16 +22,12 @@ body {
   padding: 30px 15px;
 }
 
-/* FIXED APP WRAPPER (NO LAYOUT SHIFT) */
 .app-wrapper {
   width: 100%;
   max-width: 1200px;
   min-height: 100vh;
 }
 
-/* =========================
-   TOP BAR (FIXED OVERLAP ISSUE)
-========================= */
 .top-bar {
   display: flex;
   justify-content: space-between;
@@ -61,9 +57,6 @@ body {
   background: #334155;
 }
 
-/* =========================
-   CENTER CONTAINER (NO GROWING ISSUE)
-========================= */
 .center-container {
   max-width: 800px;
   margin: auto;
@@ -73,9 +66,6 @@ body {
   min-height: 80vh;
 }
 
-/* =========================
-   INPUT FORM
-========================= */
 .input-form {
   display: flex;
   flex-direction: column;
@@ -116,9 +106,6 @@ button:hover {
   background: #2563eb;
 }
 
-/* =========================
-   RESULT CARD (FIXED SPACE)
-========================= */
 .result-card {
   margin-top: 20px;
   background: #1e293b;
@@ -128,7 +115,6 @@ button:hover {
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
-/* prevents layout jump */
 .result-card {
   min-height: 200px;
 }
@@ -416,6 +402,7 @@ button:hover {
   }
   .top-bar h1{
     font-size:1.7rem;
+    padding-left: 15px;
   }
   .history-btn{
     width:100%;
@@ -1010,6 +997,7 @@ button:hover {
 
 .sources-container h4{
     margin-bottom:15px;
+    color: #8f9292;
 }
 
 .source-card{
@@ -1101,4 +1089,119 @@ button:hover {
     margin-right:10px;
     display:flex;
     align-items:center;
+}
+/* Upload Progress */
+
+.upload-progress {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.upload-progress p {
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background: #e5e7eb;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #2563eb, #06b6d4);
+    transition: width 0.3s ease;
+}
+
+.upload-progress span {
+    display: block;
+    margin-top: 8px;
+    text-align: right;
+    font-size: 14px;
+    color: #555;
+}
+
+/* Processing Animation */
+
+.processing {
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.spinner {
+    width: 28px;
+    height: 28px;
+    border: 4px solid #e5e7eb;
+    border-top: 4px solid #2563eb;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+.processing-content{
+    width:100%;
+}
+
+.processing-content p{
+    margin-bottom:8px;
+    font-weight:600;
+}
+
+.processing-content span{
+    display:block;
+    text-align:right;
+    margin-top:8px;
+    color:#666;
+    font-size:14px;
+}
+/* Upload stage text */
+.upload-stage{
+    font-size:16px;
+    font-weight:600;
+    margin-bottom:10px;
+    transition:0.3s;
+}
+.upload-stage.reading{
+    color:#3b82f6;   /* Blue */
+}
+.upload-stage.splitting{
+    color:#f59e0b;   /* Orange */
+}
+.upload-stage.embedding{
+    color:#8b5cf6;   /* Purple */
+}
+.upload-stage.saving{
+    color:#06b6d4;   /* Cyan */
+}
+.upload-stage.completed{
+    color:#22c55e;   /* Green */
+}
+.upload-stage{
+    animation:pulseText 1.2s infinite;
+}
+
+@keyframes pulseText{
+    0%{
+        opacity:0.6;
+    }
+    50%{
+        opacity:1;
+    }
+    100%{
+        opacity:0.6;
+    }
 }
