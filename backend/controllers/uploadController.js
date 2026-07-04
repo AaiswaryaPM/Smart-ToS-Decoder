@@ -40,6 +40,17 @@ const uploadDocument = async (req, res) => {
       completed: false,
     });
 
+
+    import fs from "fs";
+
+console.log("========== FILE DEBUG ==========");
+console.log(req.file);
+console.log("Exists:", fs.existsSync(req.file.path));
+
+if (fs.existsSync(req.file.path)) {
+  console.log("Size:", fs.statSync(req.file.path).size);
+}
+console.log("================================");
     // Extract text
     const text = await extractTextFromPDF(req.file.path);
 
