@@ -62,7 +62,7 @@ const HistoryItem = memo(
 );
 
 function History({
-  history,
+  history = [],
   setHistory,
   onSelectAnalysis,
 }) {
@@ -73,7 +73,7 @@ function History({
   const filteredHistory =
     useMemo(() => {
 
-      return history.filter((item) =>
+      return (history ?? []).filter((item) =>
         (item.summary || "")
           .toLowerCase()
           .includes(search.toLowerCase())
