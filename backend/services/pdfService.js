@@ -1,28 +1,12 @@
 import fs from "fs/promises";
-import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
+import pdfParse from "pdf-parse";
 
 const extractTextFromPDF = async (filePath) => {
-  const data = await fs.readFile(filePath);
+  const dataBuffer = await fs.readFile(filePath);
 
-  const pdf = await pdfjsLib.getDocument({
-    data: new Uint8Array(data),
-  }).promise;
+  const data = await pdfParse(dataBuffer);
 
-  let fullText = "";
-
-  for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-    const page = await pdf.getPage(pageNum);
-
-    const content = await page.getTextContent();
-
-    const text = content.items
-      .map((item) => item.str)
-      .join(" ");
-
-    fullText += text + "\n";
-  }
-
-  return fullText;
+  return data.text;
 };
 
 export default extractTextFromPDF;
