@@ -1,10 +1,11 @@
 import extractTextFromPDF from "../services/pdfService.js";
+import extractTextFromDOCX from "../services/docxService.js";
 import chunkText from "../services/chunkService.js";
 import Chunk from "../models/Chunk.js";
 import Document from "../models/Document.js";
 import { createEmbedding } from "../services/embeddingService.js";
 import { setProgress, clearProgress } from "../utils/progressStore.js";
-import fs from "fs";
+
 const uploadDocument = async (req, res) => {
   try {
     if (!req.file) {
@@ -40,18 +41,22 @@ const uploadDocument = async (req, res) => {
       completed: false,
     });
 
-
-
-console.log("========== FILE DEBUG ==========");
-console.log(req.file);
-console.log("Exists:", fs.existsSync(req.file.path));
-
-if (fs.existsSync(req.file.path)) {
-  console.log("Size:", fs.statSync(req.file.path).size);
-}
-console.log("================================");
     // Extract text
-    const text = await extractTextFromPDF(req.file.path);
+    let text;
+
+    if (req.file.mimetype === "application/pdf") {
+      text = await extractTextFromPDF(req.file.path);
+    } else if (
+      req.file.mimetype ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ) {
+      text = await extractTextFromDOCX(req.file.path);
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: "Unsupported file type",
+      });
+    }
 
     // Step 2
     setProgress(document._id.toString(), {
