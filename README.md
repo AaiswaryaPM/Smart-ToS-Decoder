@@ -93,7 +93,9 @@ smart-tos-decoder/
 │   └── package.json
 │
 ├── backend/
+│   ├── config/
 │   ├── controllers/
+│   ├── middleware/
 │   ├── routes/
 │   ├── services/
 │   ├── models/
