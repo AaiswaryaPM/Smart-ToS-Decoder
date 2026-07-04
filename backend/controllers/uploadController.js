@@ -4,7 +4,7 @@ import Chunk from "../models/Chunk.js";
 import Document from "../models/Document.js";
 import { createEmbedding } from "../services/embeddingService.js";
 import { setProgress, clearProgress } from "../utils/progressStore.js";
-
+import fs from "fs";
 const uploadDocument = async (req, res) => {
   try {
     if (!req.file) {
@@ -41,7 +41,6 @@ const uploadDocument = async (req, res) => {
     });
 
 
-    import fs from "fs";
 
 console.log("========== FILE DEBUG ==========");
 console.log(req.file);
